@@ -69,7 +69,7 @@
   letter-spacing: -1px;
   font-weight: 700;
 }
-# General Layout
+/* General Layout */
 .hero-section {
   display: flex;
   align-items: center;
@@ -100,7 +100,7 @@
 
 .hero-content h2 {
   font-size: 1.25rem;
-  color: #64748b;
+  color: var(--text);
   margin-bottom: 1.25rem;
 }
 
@@ -114,7 +114,18 @@
   text-align: center;
   margin-bottom: 2rem;
   font-size: 2rem;
+  /* Inherit color from global h1 for consistency */
+  color: inherit;
 }
+
+.projects-section h2, .misc-section h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  /* Inherit color from global h1 for consistency */
+  color: inherit;
+}
+
 
 .projects-grid {
   display: grid;
@@ -143,7 +154,7 @@
 }
 
 .project-card p {
-  color: #64748b;
+  color: var(--text);
   font-size: 1rem;
 }
 

@@ -4,7 +4,7 @@ import { FaLaptopCode, FaProjectDiagram } from 'react-icons/fa';
 
 const projects = [
   {
-    title: 'Project Alpha',
+    title: 'Project Alpha 1',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     icon: <FaLaptopCode size={32} />,
   },
