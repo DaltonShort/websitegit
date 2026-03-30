@@ -5,10 +5,27 @@ import Home from './Home';
 import Projects from './Projects';
 import Miscellaneous from './Miscellaneous';
 import Login from './Login';
+import HomeAdmin from './HomeAdmin';
+import ProjectsAdmin from './ProjectsAdmin';
 import './App.css';
+
+import { useEffect, useState } from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './firebase';
+
+const ADMIN_EMAIL = "daltonshort2001@gmail.com";
 
 function Navbar() {
   const location = useLocation();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setIsAdmin(user && user.email === ADMIN_EMAIL);
+    });
+    return () => unsubscribe();
+  }, []);
+
   return (
     <header className="navbar">
       <nav className="navbar-inner">
@@ -19,6 +36,8 @@ function Navbar() {
           <li><Link to="/" className={location.pathname === '/' ? 'active' : ''}>Home</Link></li>
           <li><Link to="/projects" className={location.pathname === '/projects' ? 'active' : ''}>Projects</Link></li>
           <li><Link to="/miscellaneous" className={location.pathname === '/miscellaneous' ? 'active' : ''}>Miscellaneous</Link></li>
+          {isAdmin && <li><Link to="/admin-home" className={location.pathname === '/admin-home' ? 'active' : ''}>Home Admin</Link></li>}
+          {isAdmin && <li><Link to="/admin-projects" className={location.pathname === '/admin-projects' ? 'active' : ''}>Projects Admin</Link></li>}
           <li><Link to="/login" className={location.pathname === '/login' ? 'active' : ''}>Login</Link></li>
         </ul>
       </nav>
@@ -27,6 +46,15 @@ function Navbar() {
 }
 
 function App() {
+  // Protect admin routes: only render if admin
+  const [isAdmin, setIsAdmin] = useState(false);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setIsAdmin(user && user.email === ADMIN_EMAIL);
+    });
+    return () => unsubscribe();
+  }, []);
+
   return (
     <Router>
       <Navbar />
@@ -36,6 +64,8 @@ function App() {
           <Route path="/projects" element={<Projects />} />
           <Route path="/miscellaneous" element={<Miscellaneous />} />
           <Route path="/login" element={<Login />} />
+          {isAdmin && <Route path="/admin-home" element={<HomeAdmin />} />}
+          {isAdmin && <Route path="/admin-projects" element={<ProjectsAdmin />} />}
         </Routes>
       </div>
     </Router>

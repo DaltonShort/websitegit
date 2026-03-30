@@ -1,28 +1,24 @@
-import React from 'react';
 
-import { FaLaptopCode, FaProjectDiagram } from 'react-icons/fa';
-
-const projects = [
-  {
-    title: 'Project Alpha 1',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    icon: <FaLaptopCode size={32} />,
-  },
-  {
-    title: 'Project Beta',
-    description: 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    icon: <FaProjectDiagram size={32} />,
-  },
-];
+import React, { useEffect, useState } from 'react';
+import { db } from './firebase';
+import { collection, getDocs } from 'firebase/firestore';
 
 function Projects() {
+  const [projects, setProjects] = useState([]);
+  useEffect(() => {
+    const fetchProjects = async () => {
+      const snap = await getDocs(collection(db, 'projects'));
+      setProjects(snap.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+    };
+    fetchProjects();
+  }, []);
   return (
     <section className="projects-section">
       <h1>Software Engineering Projects</h1>
       <div className="projects-grid">
-        {projects.map((project, idx) => (
-          <div className="project-card" key={idx}>
-            {project.icon}
+        {projects.map((project) => (
+          <div className="project-card" key={project.id}>
+            {project.fileUrl && <a href={project.fileUrl} target="_blank" rel="noopener noreferrer">[File]</a>}
             <h2>{project.title}</h2>
             <p>{project.description}</p>
           </div>

@@ -1,28 +1,24 @@
-import React from 'react';
 
-import { FaFilm, FaRobot } from 'react-icons/fa';
-
-const miscProjects = [
-  {
-    title: 'Video Editing',
-    description: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-    icon: <FaFilm size={32} />,
-  },
-  {
-    title: 'AI Image Generation',
-    description: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
-    icon: <FaRobot size={32} />,
-  },
-];
+import React, { useEffect, useState } from 'react';
+import { db } from './firebase';
+import { collection, getDocs } from 'firebase/firestore';
 
 function Miscellaneous() {
+  const [misc, setMisc] = useState([]);
+  useEffect(() => {
+    const fetchMisc = async () => {
+      const snap = await getDocs(collection(db, 'miscellaneous'));
+      setMisc(snap.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+    };
+    fetchMisc();
+  }, []);
   return (
     <section className="misc-section">
       <h1>Miscellaneous Projects</h1>
       <div className="projects-grid">
-        {miscProjects.map((project, idx) => (
-          <div className="project-card" key={idx}>
-            {project.icon}
+        {misc.map((project) => (
+          <div className="project-card" key={project.id}>
+            {project.fileUrl && <a href={project.fileUrl} target="_blank" rel="noopener noreferrer">[File]</a>}
             <h2>{project.title}</h2>
             <p>{project.description}</p>
           </div>
